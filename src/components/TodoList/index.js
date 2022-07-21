@@ -9,20 +9,26 @@ export default function TodoList() {
 
   const dispatch = useDispatch()
   const [todoName, setTodoName] = useState()
-  const [prioriry, setPrioriry] = useState('Medium')
+  const [priority, setPrioriry] = useState('Medium')
+
 
   const todoSearchStatus = useSelector((state) => state.filters.status)
-
-  console.log('todoSearchStatus', todoSearchStatus)
+  const todoSearchPriorty = useSelector((state) => state.filters.priorities)
+  console.log('todoSearchStatus', todoSearchPriorty)
 
   const todoList = useSelector((state) => {
     const todoSearch = state.toDoList.filter((todo) => {
       if (todoSearchStatus === 'All') {
-        return todo.name.includes(state.filters.search)
+        return todoSearchPriorty.length
+          ? todo.name.includes(state.filters.search) && todoSearchPriorty.includes(todo.priority)
+          : todo.name.includes(state.filters.search)
       }
-      else {
-        return todo.name.includes(state.filters.search) && (todoSearchStatus !== 'All' && todoSearchStatus === 'Completed' ? todo.completed : !todo.completed)
-      }
+      return (
+        todo.name.includes(state.filters.search) &&
+        (todoSearchStatus === 'Completed' ? todo.completed : !todo.completed) &&
+        (todoSearchPriorty.length ? todoSearchPriorty.includes(todo.priority) : true)
+      )
+
     })
     return todoSearch
   })
@@ -33,7 +39,7 @@ export default function TodoList() {
     dispatch(addToDo({
       id: uuidv4,
       name: todoName,
-      prioriry: prioriry,
+      priority: priority,
       completed: false
     }))
     setTodoName('')
@@ -54,13 +60,13 @@ export default function TodoList() {
     <Row style={{ height: 'calc(100% - 40px)' }}>
       <Col span={24} style={{ height: 'calc(100% - 40px)', overflowY: 'auto' }}>
         {
-          todoList.map(todo => <Todo name={todo.name} prioriry={todo.prioriry} completed={todo.completed} key={todo.id}></Todo>)
+          todoList.map(todo => <Todo name={todo.name} prioriry={todo.priority} completed={todo.completed} id={todo.id} key={todo.id}></Todo>)
         }
       </Col>
       <Col span={24}>
         <Input.Group style={{ display: 'flex' }} compact>
           <Input value={todoName} onChange={handleChangeInput} />
-          <Select defaultValue="Medium" value={setPrioriry} onChange={handleChangeSelect}>
+          <Select defaultValue="Medium" value={priority} onChange={handleChangeSelect}>
             <Select.Option value='High' label='High'>
               <Tag color='red'>High</Tag>
             </Select.Option>

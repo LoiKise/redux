@@ -1,21 +1,25 @@
 const initState = {
     search: '',
     status: "All",
-    prioriry: []
+    priorities: []
 }
 
 const filterReducer = (state = initState, action) => {
-    console.log("cccccc", state, action)
     switch (action.type) {
         case 'searchTodoList':
             return {
-                ...state.search,
+                ...state,
                 search: action.payload
             };
-        case 'searchWithStatus':
+        case 'statusSearch':
             return {
-                ...state.status,
+                ...state,
                 status: action.payload
+            }
+        case 'prioritySearch':
+            return {
+                ...state,
+                priorities: action.payload
             }
         default:
             return state

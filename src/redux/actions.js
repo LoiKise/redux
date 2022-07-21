@@ -12,6 +12,13 @@ export const addToDo = (data) => {
     }
 }
 
+export const toggleTodoStatus = (todoId) => {
+    return {
+        type: 'todoList/toggleTodoStatus',
+        payload: todoId
+    }
+}
+
 export const searchTodoList = (text) => {
     return {
         type: 'searchTodoList',
@@ -21,7 +28,14 @@ export const searchTodoList = (text) => {
 
 export const statusSearch = (status) => {
     return {
-        type: 'searchWithStatus',
+        type: 'statusSearch',
         payload: status
+    }
+}
+
+export const prioritySearch = (priorities) => {
+    return {
+        type: 'prioritySearch',
+        payload: priorities
     }
 }
